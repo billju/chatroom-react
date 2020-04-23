@@ -1,0 +1,42 @@
+html,body{
+    background: #A59696;
+    height: 100%;
+}
+.container{
+    max-width: 960px;
+    height: 100vh;
+    margin: auto;
+}
+.card{
+    width: 80%;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 0 3px 6px rgba(0,0,0,0.3);
+}
+.btn-round img{
+    width: 85%;   
+}
+.active{
+    background: #DDA27C;
+    color: #fff;
+    border: 1px solid #FDB584;
+}
+.text-input{
+    background: #A59696;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+}
+.text-input:focus{
+    outline: none;
+}
+.text-input, ::-webkit-input-placeholder{
+    color: #fff;
+}
+.text-input, ::-moz-placeholder{
+    color: #fff;
+}
+.text-input, ::-ms-placeholder{
+    color: #fff;
+}

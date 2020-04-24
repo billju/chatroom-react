@@ -52,6 +52,7 @@ export default class Lobby extends React.Component{
         }
         this.socket = io()
         this.fileRef = React.createRef()
+        this.listRef = React.createRef()
     }
     sendMsg(event){
         let username = this.state.username,
@@ -97,7 +98,10 @@ export default class Lobby extends React.Component{
         }
     }
     componentDidUpdate(){
-
+        if(this.state.scrollToBottom){
+            this.listRef.scrollTo(0,this.listRef.scrollHeight)
+            this.setState({scrollToBottom:false})
+        }
     }
     componentDidMount(){
         let username = localStorage.getItem('chatroom-username')
@@ -118,20 +122,6 @@ export default class Lobby extends React.Component{
         })
     }
     render(){
-        let oneOnOneDialog = (
-            <div id="dialog" className="bg-secondary flex-column">
-                <div className="text-light d-flex">
-                    <h4>確定要跟&nbsp;</h4>
-                    <h3>{this.state.oooName}</h3>
-                    <h4>&nbsp;開啟一對一聊天？</h4>
-                </div>
-                <img src={this.state.oooName} alt=""/>
-                <div>
-                    <button className="btn btn-chip active ma-3">進入聊天</button>
-                    <button className="btn btn-chip bg-primary ma-3" onClick={e=>{ this.setState({oooDialog:false}) }}>按錯離開</button>
-                </div>
-            </div>
-        )
         return pug`
             .container
                 Head
@@ -141,7 +131,7 @@ export default class Lobby extends React.Component{
                     link(rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons")
                     meta(name="description" content="chatroom")
                     title Lobby
-                ul.list
+                ul.list(ref=this.listRef)
                     each dialog, index in this.state.dialogs
                         if dialog.username==this.state.username
                             li.flex-end(key=index)

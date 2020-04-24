@@ -33,6 +33,32 @@ class EventInfo extends React.Component{
         )
     }
 }
+function RightDialog(props){
+    let {text,file,avatar,username} = props.dialog
+    return (<React.Fragment>
+    <div className="dialog dialog-right flex-center">
+        <div>{text}</div>
+        {file?<img className="pa-3" src={file} alt=""></img>:""}
+    </div>
+    <div className="avatar flex-column">
+        <img src={avatar} alt=""/>
+        <div className="text-light text-small">{username}</div>
+    </div>
+    </React.Fragment>)
+}
+function LeftDialog(props){
+    let {text,file,avatar,username} = props.dialog
+    return (<React.Fragment>
+    <div className="avatar flex-column">
+        <img src={avatar} alt=""/>
+        <div className="text-light text-small">{username}</div>
+    </div>
+    <div className="dialog flex-center">
+        <div>{text}</div>
+        {file?<img className="pa-3" src={file} alt=""></img>:""}
+    </div>
+    </React.Fragment>)
+}
 export default class Lobby extends React.Component{
     constructor(props){
         super(props)
@@ -118,6 +144,14 @@ export default class Lobby extends React.Component{
         })
     }
     render(){
+        let li = this.state.dialogs.map((dialog,i)=>(
+           <li key={i} className={this.state.username==dialog.username?"flex-end":""}>
+                {dialog.event?<EventInfo dialog={dialog}/>:
+                    dialog.username==this.state.username?
+                        <RightDialog dialog={dialog}/>:<LeftDialog dialog={dialog}/>
+                }
+            </li>
+        ))
         let oneOnOneDialog = (
             <div id="dialog" className="bg-secondary flex-column">
                 <div className="text-light d-flex">
@@ -132,61 +166,32 @@ export default class Lobby extends React.Component{
                 </div>
             </div>
         )
-        return pug`
-            .container
-                Head
-                    link(rel="icon" href="/favicon.ico")
-                    link(rel="stylesheet" href="/css/lobby.css")
-                    link(rel="stylesheet" href="/css/navbar.css")
-                    link(rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons")
-                    meta(name="description" content="chatroom")
-                    title Lobby
-                ul.list
-                    each dialog, index in this.state.dialogs
-                        if dialog.username==this.state.username
-                            li.flex-end(key=index)
-                                if dialog.event
-                                    EventInfo(dialog=dialog)
-                                else
-                                    .dialog.dialog-right.flex-center
-                                        div #{dialog.text}
-                                        if dialog.file
-                                            img.pa-3(src=dialog.file alt="")
-                                    .avatar.flex-column
-                                        img(src=dialog.avatar alt="")
-                                        .text-light.text-small #{dialog.username}
-                        else
-                            li(key=index)
-                                if dialog.event
-                                    EventInfo(dialog=dialog)
-                                else
-                                    .avatar.flex-column
-                                        img(src=dialog.avatar alt="")
-                                        .text-light.text-small #{dialog.username}
-                                    .dialog.dialog-right.flex-center
-                                        div #{dialog.text}
-                                        if dialog.file
-                                            img.pa-3(src=dialog.file alt="")
-                .bottom
-                    input(type="file" ref=this.fileRef onChange=e=>this.handleFile(e) accept="image/*")
-                    i.material-icons(onClick=e=>this.handleFile(e)) sentiment_satisfied_alt
-                    i.material-icons(onClick=e=>this.handleFile(e)) insert_photo
-                    i.material-icons(onClick=e=>this.handleFile(e)) attach_file
-                    .divider
-                    input#text(type="text" onChange=e=>this.setState({text:e.target.value}) value=this.state.text)
-                    i#send.material-icons(onClick=e=>this.sendMsg()) send
-                Navbar(username=this.state.username href="/landpage")
-                if this.state.oooDialog
-                    #dialog.bg-secondary.flex-column
-                        .text-light.d-flex
-                            h4 確定要跟&nbsp;
-                            h3 #{this.state.oooName}
-                            h4 &nbsp;開啟一對一聊天？
-                        img(src=this.state.oooName alt="")
-                        div
-                            button.btn.btn-chip.active.ma-3 進入聊天
-                            button.btn.btn-chip.bg-primary.ma-3(onClick=this.setState({oooDialog:false})) 按錯離開
-        `
+        return (
+            <div className="container">
+                <Head>
+                    <link rel="icon" href="/favicon.ico"/>
+                    <link rel="stylesheet" href="/css/lobby.css"/>
+                    <link rel="stylesheet" href="/css/navbar.css"/>
+                    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"></link>
+                    <meta name="description" content="chatroom"/>
+                    <title>Lobby</title>
+                </Head>
+                <ul className="list">
+                    {li}
+                </ul>
+                <div className="bottom">
+                    <input type="file" ref={this.fileRef} onChange={e=>this.handleFile(e)} accept="image/*"/>
+                    <i className="material-icons" onClick={e=>this.handleFile(e)}>sentiment_satisfied_alt</i>
+                    <i className="material-icons" onClick={e=>this.handleFile(e)}>insert_photo</i>
+                    <i className="material-icons" onClick={e=>this.handleFile(e)}>attach_file</i>
+                    <div className="divider"></div>
+                    <input type="text" id="text" onChange={e=>this.setState({text:e.target.value})} value={this.state.text}/>
+                    <i className="material-icons" id="send" onClick={e=>{this.sendMsg()}}>send</i>
+                </div>
+                <Navbar username={this.state.username} href={"/landpage"}></Navbar>
+                {this.state.oooDialog?oneOnOneDialog:""}
+            </div>
+        )
     }
 }
 // var obj = [...document.querySelectorAll('td.chars')].map(td=>td.textContent)

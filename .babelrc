@@ -1,0 +1,9 @@
+{
+    "presets": [
+        "next/babel"
+    ],
+    "plugins": [
+        "transform-react-pug",
+        "@babel/transform-react-jsx"
+    ]
+}

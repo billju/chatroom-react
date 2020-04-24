@@ -17,7 +17,7 @@ let db = new sqlite3.Database(dbSource, err=>{
         console.log('Conneted to the SQLite database')
         db.run(`CREATE TABLE user (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT,
+            username TEXT,
             avatar TEXT,
             text TEXT,
             file TEXT,
@@ -43,21 +43,21 @@ app.prepare().then(()=>{
     const io = socket_io(server)
     io.on('connection', socket=>{
         console.log('user connected at '+new Date().toLocaleString())
-        let name = '' 
+        let username = '' 
         db.all('SELECT * FROM user LIMIT 100', (err,rows)=>{
             io.emit('loadMsg', rows)
         })
         // user leave app event
         socket.on('disconnect', ()=>{
-            console.log(name+' disconnected')
-            let msg = {name,date:new Date().toString(),event:'離開聊天室'}
-            db.run('INSERT INTO user (name,date,event) VALUES (?,?,?)', [msg.name,msg.date,msg.event])
+            console.log(username+' disconnected')
+            let msg = {username,date:new Date().toString(),event:'離開聊天室'}
+            db.run('INSERT INTO user (username,date,event) VALUES (?,?,?)', [msg.username,msg.date,msg.event])
             io.emit('chat', msg)
         })
         // user send message event
         socket.on('chat', msg=>{
-            name = msg.name
-            db.run('INSERT INTO user (name,avatar,text,file,date,event) VALUES (?,?,?,?,?,?)', [msg.name,msg.avatar,msg.text,msg.file,msg.date,msg.event])
+            username = msg.username
+            db.run('INSERT INTO user (username,avatar,text,file,date,event) VALUES (?,?,?,?,?,?)', [msg.username,msg.avatar,msg.text,msg.file,msg.date,msg.event])
             io.emit('chat', msg)
         })
     })

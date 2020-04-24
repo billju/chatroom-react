@@ -48,37 +48,28 @@ export default class Landpage extends React.Component{
         this.setState({imageBtns: this.state.imageList['dogs']})
     }
     render(){
-        const imageBtns = this.state.imageBtns.map(image=>
-            <div key={image} className="btn btn-round ma-3" onClick={e=>{this.setAvatar(image)}}>
-                <img src={image} alt=""/>
-            </div>
-        )
-        return(
-            <div className="container flex-center">
-                <Head>
-                    <link rel="icon" href="/favicon.ico"/>
-                    <link rel="stylesheet" href="/css/landpage.css"/>
-                    <meta name="description" content="chatroom"/>
-                    <title>Landing Page</title>
-                </Head>
-                <div className="card bg-primary flex-around">
-                    <div className="flex-column">
-                        <div className="btn btn-round ma-3" onClick={e=>{this.setImages('dogs')}}>狗狗</div>
-                        <div className="btn btn-round ma-3" onClick={e=>{this.setImages('cats')}}>貓貓</div>
-                    </div>
-                    <div className="flex-column">
-                        <h1 className="text-light">WELCOME</h1>
-                        <h3 className="text-light">阿貓阿狗聊天室</h3>
-                        <img className="ma-3" src={this.state.selected} alt=""/>
-                        <input type="text" className="text-input ma-3" placeholder="你的名字" onInput={e=>this.setState({username:e.target.value})}/>
-                        <button className="btn btn-chip ma-3" onClick={()=>{this.gotoLobby()}}>進入聊天</button>
-                    </div>
-                    <div className="flex-column">
-                        {imageBtns}
-                    </div>
-                </div>
-            </div>
-        );
+        return pug`
+            .container.flex-center
+                Head
+                    link(rel="icon" href="/favicon.ico")
+                    link(rel="stylesheet" href="/css/landpage.css")
+                    meta(name="description" content="chatroom")
+                    title Landing Page
+                .card.bg-primary.flex-around
+                    .flex-column
+                        .btn.btn-round.ma-3(onClick=e=>{this.setImages('dogs')}) 狗狗
+                        .btn.btn-round.ma-3(onClick=e=>{this.setImages('cats')}) 貓貓
+                    .flex-column
+                        h1.text-light WELCOME
+                        h3.text-light 阿貓阿狗聊天室
+                        img.ma-3(src=this.state.selected alt="")
+                        input.text-input.ma-3(type="text" placeholder="你的名字" onInput=e=>this.setState({username:e.target.value}))
+                        button.btn.btn-chip.ma-3(onClick=()=>{this.gotoLobby()}) 進入大廳
+                    .flex-column
+                        each image, index in this.state.imageBtns
+                            .btn.btn-round.ma-3(key=image onClick=e=>{this.setAvatar(image)})
+                                img(src=image alt="")
+        `
     }
 }
 

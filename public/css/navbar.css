@@ -4,6 +4,7 @@
     width: 100%;
     background: #524A4A;
     color: #A59696;
+    padding: 0;
 }
   
 .navbar-container {
@@ -16,7 +17,7 @@
     padding: 0 20px;
     color: #fff;
     font-weight: bold;
-    font-size: 1.2em;
+    font-size: 1em;
     text-decoration: none;
     float: left;
 }

@@ -18,7 +18,8 @@
   "description": "```\r git clone https://github.com/billju/chatroom-react\r cd chatroom-react\r npm install\r ```",
   "main": "server.js",
   "devDependencies": {
-    "babel-plugin-transform-react-pug": "^7.0.1"
+    "babel-plugin-transform-react-pug": "^7.0.1",
+    "jest": "^25.4.0"
   },
   "author": "",
   "license": "ISC"

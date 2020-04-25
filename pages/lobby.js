@@ -48,11 +48,12 @@ export default class Lobby extends React.Component{
             avatar: '',
             oooDialog: false, //one on one dialog
             oooName: '',
-            scrollToBottom: false
+            shouldScrollToBottom: true
         }
         this.socket = io()
         this.fileRef = React.createRef()
-        this.listRef = React.createRef()
+        this.ulRef = React.createRef()
+        this.liRef = React.createRef()
     }
     sendMsg(event){
         let username = this.state.username,
@@ -70,7 +71,7 @@ export default class Lobby extends React.Component{
                     dialogs,
                     text: '',
                     file: null,
-                    scrollToBottom: true
+                    shouldScrollToBottom: true
                 }
             })
             localStorage.setItem('chatroom-username', username)
@@ -92,15 +93,15 @@ export default class Lobby extends React.Component{
 
         }
     }
-    handleKeyup(event){
-        if(event.key=='enter'){
+    handleKeyUp(event){
+        if(event.key=='Enter'){
             this.sendMsg()
         }
     }
     componentDidUpdate(){
-        if(this.state.scrollToBottom){
-            this.listRef.scrollTo(0,this.listRef.scrollHeight)
-            this.setState({scrollToBottom:false})
+        if(this.state.shouldScrollToBottom){
+            this.liRef.current.scrollIntoView({ behavior:'smooth'})
+            this.setState({shouldScrollToBottom:false})
         }
     }
     componentDidMount(){
@@ -112,13 +113,13 @@ export default class Lobby extends React.Component{
             window.location = '/landpage'
         }
         this.socket.on('chat', msg=>{
-            if(msg.name!=this.state.name){
-                this.scrollToBottom = true
+            if(msg.username!=this.state.username){
                 this.setState(state=>({dialogs:[...state.dialogs,msg]}))
             }
         })
         this.socket.on('loadMsg', rows=>{
             this.setState({dialogs:rows})
+            this.ulRef.current.scrollTop = this.ulRef.current.scrollHeight
         })
     }
     render(){
@@ -131,10 +132,10 @@ export default class Lobby extends React.Component{
                     link(rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons")
                     meta(name="description" content="chatroom")
                     title Lobby
-                ul.list(ref=this.listRef)
+                ul.list(ref=this.ulRef)
                     each dialog, index in this.state.dialogs
                         if dialog.username==this.state.username
-                            li.flex-end(key=index)
+                            li.flex-end(key=index ref=this.liRef)
                                 if dialog.event
                                     EventInfo(dialog=dialog)
                                 else
@@ -146,7 +147,7 @@ export default class Lobby extends React.Component{
                                         img(src=dialog.avatar alt="")
                                         .text-light.text-small #{dialog.username}
                         else
-                            li(key=index)
+                            li(key=index ref=this.liRef)
                                 if dialog.event
                                     EventInfo(dialog=dialog)
                                 else
@@ -163,7 +164,10 @@ export default class Lobby extends React.Component{
                     i.material-icons(onClick=e=>this.handleFile(e)) insert_photo
                     i.material-icons(onClick=e=>this.handleFile(e)) attach_file
                     .divider
-                    input#text(type="text" onChange=e=>this.setState({text:e.target.value}) value=this.state.text)
+                    input#text(type="text" onChange=e=>this.setState({text:e.target.value})
+                        value=this.state.text
+                        onKeyUp=e=>this.handleKeyUp(e)
+                    )
                     i#send.material-icons(onClick=e=>this.sendMsg()) send
                 Navbar(username=this.state.username href="/landpage")
                 if this.state.oooDialog

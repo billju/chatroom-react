@@ -6,23 +6,25 @@ export default class Navbar extends React.Component{
         super(props) 
     }
     render(){
-        return (
-            <nav className="navbar">
-                <div className="navbar-container">
-                    <a className="navbar-brand">Chatroom</a>
-                    <input className="navbar-toggler" type="checkbox"/>
-                    <div className="hamburger">
-                        <div></div>
-                    </div>
-                    <ul className="navbar-menu">
-                        <li><a>{this.props.username}</a></li>
-                        <li><Link href={this.props.href}><a>換個角色</a></Link></li>
-                        <li><a>大廳模式</a></li>
-                        <li><a>系統配對</a></li>
-                        <li><a>創建</a></li>
-                    </ul>
-                </div>
-            </nav>
-        )
+        return pug`
+            .navbar
+                .navbar-container
+                    a.navbar-brand Chatroom
+                    input.navbar-toggler(type="checkbox")
+                    .hamburger
+                        div
+                    ul.navbar-menu
+                        li
+                            a #{this.props.username}
+                        li
+                            Link(href=this.props.href)
+                                a 換個角色
+                        li
+                            a 大廳模式
+                        li
+                            a 系統配對
+                        li
+                            a 創建
+        `
     }
 }

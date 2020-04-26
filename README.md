@@ -6,8 +6,14 @@
 git clone https://github.com/billju/chatroom-react
 cd chatroom-react
 npm install
-node server.js
+npm run serve
 ```
+### npm command
+1. npm run dev, show debug infos
+2. npm run build, next build would generate static server file and next export would bundle into static files
+3. npm run start, .next folder required
+4. npm run serve, run backend with ./server.js
+5. npm run test, test with jest
 ### Dependencies
 ```
 "next": "9.3.5",

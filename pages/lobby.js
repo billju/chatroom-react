@@ -78,6 +78,17 @@ export default class Lobby extends React.Component{
             this.socket.emit('chat', newChat)
         }
     }
+    handlePaste(event){
+        if(!event.clipboardData) return
+        if(!event.clipboardData.items) return
+        for(let item of event.clipboardData.items){
+            if(item.type.includes('image')){
+                let blob = item.getAsFile()
+                let img = new Image()
+                img.src = URL.createObjectURL(blob)
+            }
+        }
+    }
     handleFile(event){
         if(event.target.files){
             let file = event.target.files[0]

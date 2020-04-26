@@ -5,7 +5,9 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build && next export",
-    "start": "next start"
+    "start": "next start",
+    "serve": "node server.js",
+    "test": "jest"
   },
   "dependencies": {
     "next": "9.3.5",

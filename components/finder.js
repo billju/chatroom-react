@@ -1,6 +1,5 @@
 import React from 'react'
 
-
 export default class Finder extends React.Component{
     constructor(props){
         super(props)
@@ -11,9 +10,11 @@ export default class Finder extends React.Component{
     }
     handleChange(e){
         let text = e.target.value
+        let regexp = text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
         let matches = (!this.props.dialogs||text=='')?[]:
             this.props.dialogs.filter(dialog=>{
-                let matches = Array.from(dialog.text.matchAll(text))
+                if(!dialog.text) return false
+                let matches = Array.from(dialog.text.matchAll(regexp))
                 if(matches.length){
                     dialog.matches = []
                     let idx = 0
@@ -22,7 +23,7 @@ export default class Finder extends React.Component{
                             marked: false,
                             text: dialog.text.slice(idx,match.index)
                         })
-                        idx = match.index+match.length
+                        idx = match.index+match[0].length
                         dialog.matches.push({
                             marked: true,
                             text: dialog.text.slice(match.index,idx)
@@ -43,7 +44,7 @@ export default class Finder extends React.Component{
     }
     render(){
         return pug`
-            div
+            .finder
                 .d-flex.align-items-center.bg-primary.pa-1
                     .btn.mt-1.mx-1
                         i.material-icons list
@@ -53,16 +54,17 @@ export default class Finder extends React.Component{
                         i.material-icons keyboard_arrow_down
                     .btn.mt-1.mx-1
                         i.material-icons keyboard_arrow_up
-                    .btn.mt-1.mx-1
+                    .btn.mt-1.mx-1(onClick=e=>{this.props.toggle()})
                         i.material-icons close
-                ul
-                    each dialog, index in this.state.matches
-                        li(key=index)
-                            each match in dialog.matches
+                ol.my-0.bg-secondary
+                    each dialog, di in this.state.matches
+                        li.mt-1(key=di)
+                            span #{dialog.username}: 
+                            each match,mi in dialog.matches
                                 if match.marked
-                                    span.bg-primary #{match.text}
+                                    span.bg-primary.text-light(key=mi) #{match.text}
                                 else
-                                    span #{match.text}
+                                    span(key=mi) #{match.text}
         `
     }
 }

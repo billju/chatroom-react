@@ -152,7 +152,7 @@ export default class Lobby extends React.Component{
                     link(rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons")
                     meta(name="description" content="chatroom")
                     title Lobby
-                Navbar(username=this.state.username href="/landpage")
+                Navbar(username=this.state.username href="/")
                 if this.state.showFinder
                     Finder(dialogs=this.state.dialogs toggle=e=>{this.toggleFinder()})
                 ul.list(ref=this.ulRef)

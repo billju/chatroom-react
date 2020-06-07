@@ -19,12 +19,6 @@ export default class Navbar extends React.Component{
                         li
                             Link(href=this.props.href)
                                 a 換個角色
-                        li
-                            a 大廳模式
-                        li
-                            a 系統配對
-                        li
-                            a 創建
         `
     }
 }
